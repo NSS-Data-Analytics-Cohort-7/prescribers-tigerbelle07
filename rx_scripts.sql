@@ -16,7 +16,7 @@
 -- p.nppes_provider_first_name,
 -- p.nppes_provider_last_org_name,
 -- p.specialty_description,
--- COUNT(total_claim_count) AS total_claim
+-- SUM(total_claim_count) AS total_claim
 
 -- FROM prescription rx
 -- LEFT JOIN prescriber p
@@ -27,12 +27,35 @@
 -- 2a. Which specialty had the most total number of claims (totaled over all drugs)?
 -- SELECT 
 -- p.specialty_description,
--- COUNT(total_claim_count) AS total_claim
+-- SUM(total_claim_count) AS total_claim
 
 -- FROM prescription rx
 -- LEFT JOIN prescriber p
 -- on rx.npi = p.npi
 -- GROUP BY 1
 -- ORDER BY total_claim DESC
+
+-- 2b. Which specialty had the most total number of claims for opioids?
+-- SELECT 
+-- p.specialty_description,
+-- drg.drug_name,
+-- drg.total_claim
+
+-- FROM prescriber p
+-- LEFT JOIN 
+-- (SELECT 
+-- rx.drug_name,
+-- rx.npi, 
+-- d.opioid_drug_flag,
+-- SUM(rx.total_claim_count) AS total_claim 
+ 
+-- FROM prescription rx
+-- LEFT JOIN drug d
+-- on rx.drug_name = d.drug_name
+-- WHERE d.opioid_drug_flag = 'Y'
+-- GROUP BY 1,2,3 
+-- ) as drg
+-- ON p.npi = drg.npi
+
 
 
