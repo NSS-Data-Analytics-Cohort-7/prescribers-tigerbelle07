@@ -57,5 +57,19 @@
 -- ) as drg
 -- ON p.npi = drg.npi
 
+-- 2c.Challenge Question: Are there any specialties that appear 
+-- in the prescriber table that have no associated prescriptions in the prescription table?
+-- SELECT
+-- p.specialty_description, 
+-- rx.total_claim_count
+
+-- FROM prescriber p
+-- LEFT JOIN prescription rx
+-- ON p.npi = rx.npi
+-- WHERE rx.total_claim_count IS NULL
+--rows 1000
+
+
+
 
 
