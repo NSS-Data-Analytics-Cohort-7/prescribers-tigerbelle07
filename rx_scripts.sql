@@ -36,26 +36,29 @@
 -- ORDER BY total_claim DESC
 
 -- 2b. Which specialty had the most total number of claims for opioids?
--- SELECT 
--- p.specialty_description,
--- drg.drug_name,
--- drg.total_claim
+SELECT 
+p.specialty_description,--help by Rob
+--drg.drug_name,
+SUM(drg.total_claim) AS TOT_AMT
 
--- FROM prescriber p
--- LEFT JOIN 
--- (SELECT 
--- rx.drug_name,
--- rx.npi, 
--- d.opioid_drug_flag,
--- SUM(rx.total_claim_count) AS total_claim 
+FROM prescriber p
+INNER JOIN 
+(SELECT 
+rx.drug_name,
+rx.npi, 
+d.opioid_drug_flag,
+SUM(rx.total_claim_count) AS total_claim 
  
--- FROM prescription rx
--- LEFT JOIN drug d
--- on rx.drug_name = d.drug_name
--- WHERE d.opioid_drug_flag = 'Y'
--- GROUP BY 1,2,3 
--- ) as drg
--- ON p.npi = drg.npi
+FROM prescription rx
+INNER JOIN drug d
+on rx.drug_name = d.drug_name
+WHERE d.opioid_drug_flag = 'Y'
+GROUP BY 1,2,3
+) as drg
+ON p.npi = drg.npi
+
+GROUP BY 1
+ORDER BY TOT_AMT DESC
 
 -- 2c.Challenge Question: Are there any specialties that appear 
 -- in the prescriber table that have no associated prescriptions in the prescription table?
@@ -123,3 +126,32 @@
 -- ON d.drug_name = p.drug_name
 -- GROUP BY 1 
 -- ORDER BY drug_cost DESC
+
+-- 4a. For each drug in the drug table, return the drug name and then a column named 'drug_type' which says 'opioid' for drugs which have opioid_drug_flag = 'Y', says 'antibiotic' 
+-- for those drugs which have antibiotic_drug_flag = 'Y', and says 'neither' for all other drugs.
+-- SELECT 
+-- rx.drug_name,
+-- CASE WHEN d.opioid_drug_flag = 'Y'THEN 'Opioid'
+--      WHEN d.antibiotic_drug_flag = 'Y' THEN 'Antibiotic'
+--      ELSE 'Neither' END AS drug_type
+
+-- FROM prescription rx
+-- LEFT JOIN drug d
+-- on rx.drug_name = d.drug_name
+-- ORDER BY drug_type ASC
+--1000 rows
+
+-- 4b. Building off of the query you wrote for part a, determine whether more was spent (total_drug_cost) on opioids or on antibiotics. 
+-- Hint: Format the total costs as MONEY for easier comparision.
+-- SELECT 
+-- --rx.drug_name,
+-- CASE WHEN d.opioid_drug_flag = 'Y'THEN 'Opioid'
+--      WHEN d.antibiotic_drug_flag = 'Y' THEN 'Antibiotic'
+--      ELSE 'Neither' END AS drug_type,
+-- CAST(SUM(rx.total_drug_cost) AS MONEY) AS Tot_Money     
+
+-- FROM prescription rx
+-- LEFT JOIN drug d
+-- on rx.drug_name = d.drug_name
+-- GROUP BY drug_type
+-- ORDER BY Tot_Money DESC
