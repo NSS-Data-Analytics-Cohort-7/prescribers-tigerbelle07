@@ -67,34 +67,59 @@
 -- LEFT JOIN prescription rx
 -- ON p.npi = rx.npi
 -- WHERE rx.total_claim_count IS NULL
---rows 1000
+-- rows 1000
 
 -- 2d Difficult Bonus: Do not attempt until you have solved all other problems! For each specialty, report the 
 -- percentage of total claims by that specialty which are for opioids. Which specialties have a high percentage of opioids?
+--come back to later
+-- SELECT DISTINCT
+-- p.specialty_description,
+-- drg.drug_name,
+-- drg.total_claim
 
-SELECT DISTINCT
-p.specialty_description,
-drg.drug_name,
-drg.total_claim
-
-FROM prescriber p
-LEFT JOIN 
-(SELECT 
-rx.drug_name,
-rx.npi, 
-d.opioid_drug_flag,
-SUM(rx.total_claim_count) AS total_claim 
+-- FROM prescriber p
+-- LEFT JOIN 
+-- (SELECT 
+-- rx.drug_name,
+-- rx.npi, 
+-- d.opioid_drug_flag,
+-- SUM(rx.total_claim_count) AS total_claim 
  
-FROM prescription rx
-LEFT JOIN drug d
-on rx.drug_name = d.drug_name
-WHERE d.opioid_drug_flag = 'Y'
-AND d.drug_name IS NOT NULL
-AND rx.total_claim_count IS NOT NULL 
-GROUP BY 1,2,3 
-) as drg
-ON p.npi = drg.npi
+-- FROM prescription rx
+-- LEFT JOIN drug d
+-- on rx.drug_name = d.drug_name
+-- WHERE d.opioid_drug_flag = 'Y'
+-- AND d.drug_name IS NOT NULL
+-- AND rx.total_claim_count IS NOT NULL 
+-- GROUP BY 1,2,3 
+-- ) as drg
+-- ON p.npi = drg.npi
 
-WHERE
-p.specialty_description IS NOT NULL
+-- WHERE
+-- p.specialty_description IS NOT NULL
 
+-- 3a.Which drug (generic_name) had the highest total drug cost?
+
+-- SELECT
+-- d.generic_name, --Drug_name
+-- SUM(p.total_drug_cost) AS drug_cost
+
+-- FROM drug d
+-- INNER JOIN prescription p
+-- ON d.drug_name = p.drug_name
+-- GROUP BY 1 
+-- ORDER BY drug_cost DESC
+-- --1000 rows
+
+-- 3b. Which drug (generic_name) has the hightest total cost per day? 
+-- **Bonus: Round your cost per day column to 2 decimal places. Google ROUND to see how this works.
+
+-- SELECT
+-- d.generic_name, --Drug_name
+-- ROUND(SUM(p.total_drug_cost/p.total_day_supply),2) AS drug_cost
+
+-- FROM drug d
+-- INNER JOIN prescription p
+-- ON d.drug_name = p.drug_name
+-- GROUP BY 1 
+-- ORDER BY drug_cost DESC
