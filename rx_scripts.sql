@@ -59,7 +59,7 @@
 
 -- 2c.Challenge Question: Are there any specialties that appear 
 -- in the prescriber table that have no associated prescriptions in the prescription table?
--- SELECT
+-- SELECT DISTINCT
 -- p.specialty_description, 
 -- rx.total_claim_count
 
@@ -69,7 +69,32 @@
 -- WHERE rx.total_claim_count IS NULL
 --rows 1000
 
+-- 2d Difficult Bonus: Do not attempt until you have solved all other problems! For each specialty, report the 
+-- percentage of total claims by that specialty which are for opioids. Which specialties have a high percentage of opioids?
 
+SELECT DISTINCT
+p.specialty_description,
+drg.drug_name,
+drg.total_claim
 
+FROM prescriber p
+LEFT JOIN 
+(SELECT 
+rx.drug_name,
+rx.npi, 
+d.opioid_drug_flag,
+SUM(rx.total_claim_count) AS total_claim 
+ 
+FROM prescription rx
+LEFT JOIN drug d
+on rx.drug_name = d.drug_name
+WHERE d.opioid_drug_flag = 'Y'
+AND d.drug_name IS NOT NULL
+AND rx.total_claim_count IS NOT NULL 
+GROUP BY 1,2,3 
+) as drg
+ON p.npi = drg.npi
 
+WHERE
+p.specialty_description IS NOT NULL
 
