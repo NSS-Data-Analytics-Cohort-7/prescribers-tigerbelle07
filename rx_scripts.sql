@@ -181,17 +181,18 @@
 --10 rows; Morristown - smallest
 
 -- 5c. What is the largest (in terms of population) county which is not included in a CBSA? Report the county name and population.
--- SELECT 
--- c.cbsaname,
--- SUM(p.population) as Pop
+-- SELECT --Help by Jonathon 
+-- c.cbsa,
+-- p.fipscounty,
+-- p.population
 
--- FROM cbsa c
--- LEFT JOIN population p
+-- FROM population p
+-- LEFT JOIN  cbsa c
 -- ON c.fipscounty = p.fipscounty
 
--- WHERE p.population is NULL
--- GROUP BY 1
--- ORDER BY pop DESC
+-- WHERE c.fipscounty is NULL
+-- ORDER BY p.population DESC
+
 
 
 
