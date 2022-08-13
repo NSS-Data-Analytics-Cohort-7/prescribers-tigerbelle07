@@ -36,29 +36,29 @@
 -- ORDER BY total_claim DESC
 
 -- 2b. Which specialty had the most total number of claims for opioids?
-SELECT 
-p.specialty_description,--help by Rob
---drg.drug_name,
-SUM(drg.total_claim) AS TOT_AMT
+-- SELECT 
+-- p.specialty_description,--help by Rob
+-- --drg.drug_name,
+-- SUM(drg.total_claim) AS TOT_AMT
 
-FROM prescriber p
-INNER JOIN 
-(SELECT 
-rx.drug_name,
-rx.npi, 
-d.opioid_drug_flag,
-SUM(rx.total_claim_count) AS total_claim 
+-- FROM prescriber p
+-- INNER JOIN 
+-- (SELECT 
+-- rx.drug_name,
+-- rx.npi, 
+-- d.opioid_drug_flag,
+-- SUM(rx.total_claim_count) AS total_claim 
  
-FROM prescription rx
-INNER JOIN drug d
-on rx.drug_name = d.drug_name
-WHERE d.opioid_drug_flag = 'Y'
-GROUP BY 1,2,3
-) as drg
-ON p.npi = drg.npi
+-- FROM prescription rx
+-- INNER JOIN drug d
+-- on rx.drug_name = d.drug_name
+-- WHERE d.opioid_drug_flag = 'Y'
+-- GROUP BY 1,2,3
+-- ) as drg
+-- ON p.npi = drg.npi
 
-GROUP BY 1
-ORDER BY TOT_AMT DESC
+-- GROUP BY 1
+-- ORDER BY TOT_AMT DESC
 
 -- 2c.Challenge Question: Are there any specialties that appear 
 -- in the prescriber table that have no associated prescriptions in the prescription table?
@@ -144,14 +144,40 @@ ORDER BY TOT_AMT DESC
 -- 4b. Building off of the query you wrote for part a, determine whether more was spent (total_drug_cost) on opioids or on antibiotics. 
 -- Hint: Format the total costs as MONEY for easier comparision.
 -- SELECT 
--- --rx.drug_name,
 -- CASE WHEN d.opioid_drug_flag = 'Y'THEN 'Opioid'
---      WHEN d.antibiotic_drug_flag = 'Y' THEN 'Antibiotic'
---      ELSE 'Neither' END AS drug_type,
--- CAST(SUM(rx.total_drug_cost) AS MONEY) AS Tot_Money     
+--       WHEN d.antibiotic_drug_flag = 'Y' THEN 'Antibiotic'
+--       ELSE 'Neither' END AS drug_type,
+-- CAST(SUM(rx.total_drug_cost) AS MONEY) AS Tot_Money   
 
 -- FROM prescription rx
 -- LEFT JOIN drug d
 -- on rx.drug_name = d.drug_name
 -- GROUP BY drug_type
 -- ORDER BY Tot_Money DESC
+
+-- 5a. How many CBSAs are in Tennessee? Warning: The cbsa table contains information for all states, not just Tennessee.
+-- SELECT * 
+-- FROM cbsa
+-- limit 20
+
+-- SELECT *
+-- FROM cbsa
+-- WHERE cbsaname LIKE '%TN'
+-- --rows 33
+
+-- 5b. Which cbsa has the largest combined population? Which has the smallest? Report the CBSA name and total population.
+--fipcounty - shared column
+
+-- SELECT 
+-- c.cbsaname,
+-- SUM(p.population) as Pop
+
+-- FROM cbsa c
+-- INNER JOIN population p
+-- ON c.fipscounty = p.fipscounty
+-- GROUP BY 1
+-- ORDER BY pop DESC --ASC
+--10 rows; Nashville - largest
+--10 rows; Morristown - smallest
+
+
